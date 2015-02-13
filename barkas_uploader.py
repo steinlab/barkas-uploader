@@ -4,7 +4,7 @@
 import dropbox
 import datetime
 from PyQt5.QtCore import QDir, Qt, QTimer
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QFileDialog, QGridLayout,
                              QGroupBox, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QSpinBox,
                              QVBoxLayout, QWidget)
@@ -160,6 +160,8 @@ if __name__ == '__main__':
     import sys
 
     app = QApplication(sys.argv)
+    ico = QIcon("icon.png")
+    app.setWindowIcon(ico)
     screenshot = Screenshot()
     screenshot.show()
     sys.exit(app.exec_())
