@@ -53,7 +53,7 @@ class Screenshot(QWidget):
     def saveScreenshot(self):
         now_time = datetime.datetime.now()
         format = 'png'
-        initialPath = QDir.currentPath() + "/Screenshoot_" + now_time.strftime("_%d_%m_%y_%H_%M")
+        initialPath = QDir.currentPath() + "/Screenshot_" + now_time.strftime("_%d_%m_%y_%H_%M")
 
         fileName, _ = QFileDialog.getSaveFileName(self, "Save As", initialPath,
                                                   "%s Files (*.%s);;All Files (*)" % (format.upper(), format))
@@ -63,7 +63,7 @@ class Screenshot(QWidget):
     def saveDropboxScreenshot(self):
         format = 'png'
         now_time = datetime.datetime.now()
-        initialPath = QDir.currentPath() + "/Screenshoot_" + now_time.strftime("_%d_%m_%y_%H_%M." + format)
+        initialPath = QDir.currentPath() + "/Screenshot_" + now_time.strftime("_%d_%m_%y_%H_%M." + format)
 
 
         if initialPath:
@@ -74,13 +74,13 @@ class Screenshot(QWidget):
 
 
         f = open(initialPath, 'rb')
-        response = client.put_file('Screenshoot_' + now_time.strftime("_%d_%m_%y_%H_%M." + format), f)
+        response = client.put_file('Screenshot_' + now_time.strftime("_%d_%m_%y_%H_%M." + format), f)
         print ('uploaded: ', response)
 
         folder_metadata = client.metadata('/')
         print ('metadata: ', folder_metadata)
 
-        f, metadata = client.get_file_and_metadata('screenshoot_' + now_time.strftime("_%d_%m_%y_%H_%M." + format))
+        f, metadata = client.get_file_and_metadata('Screenshot_' + now_time.strftime("_%d_%m_%y_%H_%M." + format))
         out = open(initialPath, 'wb')
         out.write(f.read())
         out.close()
