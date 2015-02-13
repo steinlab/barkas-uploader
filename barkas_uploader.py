@@ -2,6 +2,7 @@
 # Barkas Uploader 0.1
 
 import dropbox
+import datetime
 from PyQt5.QtCore import QDir, Qt, QTimer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QFileDialog, QGridLayout,
@@ -50,8 +51,9 @@ class Screenshot(QWidget):
                           self.shootScreen)
 
     def saveScreenshot(self):
+        now_time = datetime.datetime.now()
         format = 'png'
-        initialPath = QDir.currentPath() + "/Screenshoot." + format
+        initialPath = QDir.currentPath() + "/Screenshoot_" + now_time.strftime("_%d_%m_%y_%H_%M")
 
         fileName, _ = QFileDialog.getSaveFileName(self, "Save As", initialPath,
                                                   "%s Files (*.%s);;All Files (*)" % (format.upper(), format))
@@ -62,15 +64,16 @@ class Screenshot(QWidget):
         client = dropbox.client.DropboxClient('NsnEOg0nZHQAAAAAAAAUWYsLigDlpUq8alBAGYFxdRZttDLfq57j45ePB-7kVOTJ')
         print('linked account: ', client.account_info())
 
-        f = open('working-draft.txt', 'rb')
-        response = client.put_file('/magnum-opus.txt', f)
+
+        f = open('screenshoot.png', 'rb')
+        response = client.put_file('/screenshoot.png', f)
         print ('uploaded: ', response)
 
         folder_metadata = client.metadata('/')
         print ('metadata: ', folder_metadata)
 
-        f, metadata = client.get_file_and_metadata('/magnum-opus.txt')
-        out = open('magnum-opus.txt', 'wb')
+        f, metadata = client.get_file_and_metadata('/screenshoot.png')
+        out = open('screenshoot.png', 'wb')
         out.write(f.read())
         out.close()
         print (metadata)
