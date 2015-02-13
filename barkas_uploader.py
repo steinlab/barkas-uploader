@@ -47,7 +47,7 @@ class Screenshot(QWidget):
             self.hide()
         self.newScreenshotButton.setDisabled(True)
 
-        QTimer.singleShot(self.delaySpinBox.value() * 1,
+        QTimer.singleShot(self.delaySpinBox.value(),
                           self.shootScreen)
 
     def saveScreenshot(self):
@@ -61,19 +61,27 @@ class Screenshot(QWidget):
             self.originalPixmap.save(fileName, format)
 
     def saveDropboxScreenshot(self):
+        format = 'png'
+        now_time = datetime.datetime.now()
+        initialPath = QDir.currentPath() + "/Screenshoot_" + now_time.strftime("_%d_%m_%y_%H_%M." + format)
+
+
+        if initialPath:
+            self.originalPixmap.save(initialPath, format)
+
         client = dropbox.client.DropboxClient('NsnEOg0nZHQAAAAAAAAUWYsLigDlpUq8alBAGYFxdRZttDLfq57j45ePB-7kVOTJ')
         print('linked account: ', client.account_info())
 
 
-        f = open('screenshoot.png', 'rb')
-        response = client.put_file('/screenshoot.png', f)
+        f = open(initialPath, 'rb')
+        response = client.put_file('Screenshoot_' + now_time.strftime("_%d_%m_%y_%H_%M." + format), f)
         print ('uploaded: ', response)
 
         folder_metadata = client.metadata('/')
         print ('metadata: ', folder_metadata)
 
-        f, metadata = client.get_file_and_metadata('/screenshoot.png')
-        out = open('screenshoot.png', 'wb')
+        f, metadata = client.get_file_and_metadata('screenshoot_' + now_time.strftime("_%d_%m_%y_%H_%M." + format))
+        out = open(initialPath, 'wb')
         out.write(f.read())
         out.close()
         print (metadata)
