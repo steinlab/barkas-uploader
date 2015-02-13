@@ -101,7 +101,8 @@ class Screenshot(QWidget):
         self.newScreenshotButton = self.createButton("Новый скриншот",
                 self.newScreenshot)
 
-        self.saveScreenshotButton = self.createButton("Отправить в Dropbox",
+        self.saveDropboxScreenshotButton = self.createButton("Сохранить в Dropbox" , self.saveScreenshot)
+        self.saveScreenshotButton = self.createButton("Сохранить",
                 self.saveScreenshot)
 
         self.quitScreenshotButton = self.createButton("Выход", self.close)
