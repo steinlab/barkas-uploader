@@ -55,6 +55,7 @@ class Screenshot(QWidget):
         format = 'png'
         initialPath = QDir.currentPath() + "/Screenshot_" + now_time.strftime("_%d_%m_%y_%H_%M")
 
+
         fileName, _ = QFileDialog.getSaveFileName(self, "Save As", initialPath,
                                                   "%s Files (*.%s);;All Files (*)" % (format.upper(), format))
         if fileName:
