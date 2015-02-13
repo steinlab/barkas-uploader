@@ -113,6 +113,7 @@ class Screenshot(QWidget):
         self.buttonsLayout.addStretch()
         self.buttonsLayout.addWidget(self.newScreenshotButton)
         self.buttonsLayout.addWidget(self.saveScreenshotButton)
+        self.buttonsLayout.addWidget(self.saveDropboxScreenshotButton)
         self.buttonsLayout.addWidget(self.quitScreenshotButton)
 
     def createButton(self, text, member):
