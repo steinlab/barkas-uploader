@@ -57,6 +57,15 @@ class Screenshot(QWidget):
         if fileName:
             self.originalPixmap.save(fileName, format)
 
+    def saveDropboxScreenshot(self):
+        format = 'png'
+        initialPath = QDir.currentPath() + "/Screenshoot." + format
+
+        fileName, _ = QFileDialog.getSaveFileName(self, "Save As", initialPath,
+                "%s Files (*.%s);;All Files (*)" % (format.upper(), format))
+        if fileName:
+            self.originalPixmap.save(fileName, format)   
+
     def shootScreen(self):
         if self.delaySpinBox.value() != 0:
             QApplication.instance().beep()
@@ -71,7 +80,7 @@ class Screenshot(QWidget):
 
         self.newScreenshotButton.setDisabled(False)
         if self.hideThisWindowCheckBox.isChecked():
-            self.show()
+            self.show()        
 
     def updateCheckBox(self):
         if self.delaySpinBox.value() == 0:
@@ -102,7 +111,7 @@ class Screenshot(QWidget):
                 self.newScreenshot)
 
         self.saveDropboxScreenshotButton = self.createButton("Сохранить в Dropbox" ,
-        self.saveScreenshot)
+        self.saveDropboxScreenshot)
 
         self.saveScreenshotButton = self.createButton("Сохранить",
                 self.saveScreenshot)
