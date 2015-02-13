@@ -1,12 +1,13 @@
 #!/usr/bin/env python
-
 # Barkas Uploader 0.1
 
+import dropbox
 from PyQt5.QtCore import QDir, Qt, QTimer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QFileDialog, QGridLayout,
-        QGroupBox, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QSpinBox,
-        QVBoxLayout, QWidget)
+                             QGroupBox, QHBoxLayout, QLabel, QPushButton, QSizePolicy, QSpinBox,
+                             QVBoxLayout, QWidget)
+
 
 
 class Screenshot(QWidget):
@@ -15,7 +16,7 @@ class Screenshot(QWidget):
 
         self.screenshotLabel = QLabel()
         self.screenshotLabel.setSizePolicy(QSizePolicy.Expanding,
-                QSizePolicy.Expanding)
+                                           QSizePolicy.Expanding)
         self.screenshotLabel.setAlignment(Qt.AlignCenter)
         self.screenshotLabel.setMinimumSize(240, 160)
 
@@ -46,25 +47,33 @@ class Screenshot(QWidget):
         self.newScreenshotButton.setDisabled(True)
 
         QTimer.singleShot(self.delaySpinBox.value() * 1,
-                self.shootScreen)
+                          self.shootScreen)
 
     def saveScreenshot(self):
         format = 'png'
         initialPath = QDir.currentPath() + "/Screenshoot." + format
 
         fileName, _ = QFileDialog.getSaveFileName(self, "Save As", initialPath,
-                "%s Files (*.%s);;All Files (*)" % (format.upper(), format))
+                                                  "%s Files (*.%s);;All Files (*)" % (format.upper(), format))
         if fileName:
             self.originalPixmap.save(fileName, format)
 
     def saveDropboxScreenshot(self):
-        format = 'png'
-        initialPath = QDir.currentPath() + "/Screenshoot." + format
+        client = dropbox.client.DropboxClient('NsnEOg0nZHQAAAAAAAAUWYsLigDlpUq8alBAGYFxdRZttDLfq57j45ePB-7kVOTJ')
+        print('linked account: ', client.account_info())
 
-        fileName, _ = QFileDialog.getSaveFileName(self, "Save As", initialPath,
-                "%s Files (*.%s);;All Files (*)" % (format.upper(), format))
-        if fileName:
-            self.originalPixmap.save(fileName, format)   
+        f = open('working-draft.txt', 'rb')
+        response = client.put_file('/magnum-opus.txt', f)
+        print ('uploaded: ', response)
+
+        folder_metadata = client.metadata('/')
+        print ('metadata: ', folder_metadata)
+
+        f, metadata = client.get_file_and_metadata('/magnum-opus.txt')
+        out = open('magnum-opus.txt', 'wb')
+        out.write(f.read())
+        out.close()
+        print (metadata)
 
     def shootScreen(self):
         if self.delaySpinBox.value() != 0:
@@ -80,7 +89,7 @@ class Screenshot(QWidget):
 
         self.newScreenshotButton.setDisabled(False)
         if self.hideThisWindowCheckBox.isChecked():
-            self.show()        
+            self.show()
 
     def updateCheckBox(self):
         if self.delaySpinBox.value() == 0:
@@ -108,13 +117,13 @@ class Screenshot(QWidget):
 
     def createButtonsLayout(self):
         self.newScreenshotButton = self.createButton("Новый скриншот",
-                self.newScreenshot)
+                                                     self.newScreenshot)
 
-        self.saveDropboxScreenshotButton = self.createButton("Сохранить в Dropbox" ,
-        self.saveDropboxScreenshot)
+        self.saveDropboxScreenshotButton = self.createButton("Сохранить в Dropbox",
+                                                             self.saveDropboxScreenshot)
 
         self.saveScreenshotButton = self.createButton("Сохранить",
-                self.saveScreenshot)
+                                                      self.saveScreenshot)
 
         self.quitScreenshotButton = self.createButton("Выход", self.close)
 
@@ -132,12 +141,11 @@ class Screenshot(QWidget):
 
     def updateScreenshotLabel(self):
         self.screenshotLabel.setPixmap(self.originalPixmap.scaled(
-                self.screenshotLabel.size(), Qt.KeepAspectRatio,
-                Qt.SmoothTransformation))
+            self.screenshotLabel.size(), Qt.KeepAspectRatio,
+            Qt.SmoothTransformation))
 
 
 if __name__ == '__main__':
-
     import sys
 
     app = QApplication(sys.argv)
