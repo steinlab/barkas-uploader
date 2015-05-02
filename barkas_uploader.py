@@ -3,6 +3,7 @@
 
 import dropbox
 import datetime
+from PyQt5.uic import loadUi
 from PyQt5.QtCore import QDir, Qt, QTimer
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QFileDialog, QGridLayout,
@@ -34,7 +35,7 @@ class Screenshot(QWidget):
         self.delaySpinBox.setValue(5)
 
         self.setWindowTitle("Barkas Uploader 0.1")
-        self.resize(300, 200)
+        self.resize(600, 400)
 
     def resizeEvent(self, event):
         scaledSize = self.originalPixmap.size()
@@ -60,6 +61,15 @@ class Screenshot(QWidget):
                                                   "%s Files (*.%s);;All Files (*)" % (format.upper(), format))
         if fileName:
             self.originalPixmap.save(fileName, format)
+
+    def aboutWidget(self):
+        self.mainLayout = loadUi('about.ui')
+        self.mainLayout.show()
+
+
+
+
+
 
     def saveDropboxScreenshot(self):
         format = 'png'
@@ -132,11 +142,12 @@ class Screenshot(QWidget):
                                                      self.newScreenshot)
 
         self.saveDropboxScreenshotButton = self.createButton("Сохранить в Dropbox",
-                                                             self.saveDropboxScreenshot)
+                                                     self.saveDropboxScreenshot)
 
         self.saveScreenshotButton = self.createButton("Сохранить",
-                                                      self.saveScreenshot)
-
+                                                     self.saveScreenshot)
+        self.aboutButton = self.createButton("О программе",
+                                                     self.aboutWidget)
         self.quitScreenshotButton = self.createButton("Выход", self.close)
 
         self.buttonsLayout = QHBoxLayout()
@@ -144,6 +155,7 @@ class Screenshot(QWidget):
         self.buttonsLayout.addWidget(self.newScreenshotButton)
         self.buttonsLayout.addWidget(self.saveScreenshotButton)
         self.buttonsLayout.addWidget(self.saveDropboxScreenshotButton)
+        self.buttonsLayout.addWidget(self.aboutButton)
         self.buttonsLayout.addWidget(self.quitScreenshotButton)
 
     def createButton(self, text, member):
